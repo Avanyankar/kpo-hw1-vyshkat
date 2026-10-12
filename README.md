@@ -97,3 +97,23 @@ container = build_container()
 container.register(ServiceCenter, instance=FakeServiceCenter(Verdict(False, "...")))
 container.resolve(AcceptanceService)  # внутри — фейк
 ```
+
+## Расширение: новый вид техники или вещи
+
+Например, электроскутер:
+
+1. **Домен** — класс-наследник в `domain/vehicles.py` (для вещи — в `domain/things.py`):
+
+   ```python
+   @dataclass(frozen=True)
+   class EScooter(Vehicle):
+       daily_energy_kwh: float
+       kind: ClassVar[str] = "Электроскутер"
+
+       def __post_init__(self) -> None:
+           super().__post_init__()
+           require_positive("суточный расход", self.daily_energy_kwh)
+   ```
+
+2. **Консоль** — строка в `VEHICLE_KINDS` (для вещи — в `THING_KINDS`) в `cli/catalog.py`:
+   имя для команды, фабрика из параметров и подсказка по параметрам.

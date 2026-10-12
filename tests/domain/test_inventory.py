@@ -1,5 +1,6 @@
 import pytest
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.inventory import InventoryItem
 from vyshkat.domain.protocols import Inventoried
 from vyshkat.domain.things import Helmet
@@ -14,7 +15,7 @@ def test_item_takes_kind_and_name_from_its_asset() -> None:
 
 @pytest.mark.parametrize("number", ["", "   "])
 def test_blank_number_is_rejected(number: str) -> None:
-    with pytest.raises(ValueError, match="инвентарный номер"):
+    with pytest.raises(DomainError, match="инвентарный номер"):
         InventoryItem(number, Helmet("Шлем M"))
 
 

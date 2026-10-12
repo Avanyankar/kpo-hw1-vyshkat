@@ -8,6 +8,7 @@ class Fleet:
         self._items: dict[str, InventoryItem] = {}
 
     def add(self, item: InventoryItem) -> None:
+        # Не DomainError: дубль возможен только при баге в выдаче номеров.
         if item.number in self._items:
             raise ValueError(f"инвентарный номер {item.number} уже занят")
         self._items[item.number] = item

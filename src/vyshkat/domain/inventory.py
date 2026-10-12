@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.things import Thing
 from vyshkat.domain.vehicles import Vehicle
 
@@ -17,7 +18,7 @@ class InventoryItem:
 
     def __post_init__(self) -> None:
         if not self.number.strip():
-            raise ValueError("инвентарный номер не может быть пустым")
+            raise DomainError("инвентарный номер не может быть пустым")
 
     @property
     def kind(self) -> str:

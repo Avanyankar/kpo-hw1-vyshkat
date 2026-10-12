@@ -1,8 +1,10 @@
+import math
 from collections.abc import Callable
 from dataclasses import FrozenInstanceError
 
 import pytest
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.vehicles import Bicycle, EBike, Scooter, Vehicle
 
 type VehicleFactory = Callable[[str, int, int], Vehicle]
@@ -32,30 +34,28 @@ def test_scale_bounds_are_accepted(make: VehicleFactory, value: int) -> None:
 @each_kind
 @pytest.mark.parametrize("simplicity", [0, 11])
 def test_simplicity_out_of_scale_is_rejected(make: VehicleFactory, simplicity: int) -> None:
-    with pytest.raises(ValueError, match="простота"):
+    with pytest.raises(DomainError, match="простота"):
         make("Транспорт", simplicity, 5)
 
 
 @each_kind
 @pytest.mark.parametrize("condition", [0, 11])
 def test_condition_out_of_scale_is_rejected(make: VehicleFactory, condition: int) -> None:
-    with pytest.raises(ValueError, match="состояние"):
+    with pytest.raises(DomainError, match="состояние"):
         make("Транспорт", 5, condition)
 
 
 @each_kind
 @pytest.mark.parametrize("name", ["", "   "])
 def test_blank_name_is_rejected(make: VehicleFactory, name: str) -> None:
-    with pytest.raises(ValueError, match="наименование"):
+    with pytest.raises(DomainError, match="наименование"):
         make(name, 5, 5)
 
 
 @pytest.mark.parametrize("vehicle_type", [Scooter, EBike])
-@pytest.mark.parametrize("energy", [0, -0.5])
-def test_non_positive_energy_is_rejected(
-    vehicle_type: type[Scooter | EBike], energy: float
-) -> None:
-    with pytest.raises(ValueError, match="суточный расход"):
+@pytest.mark.parametrize("energy", [0, -0.5, math.nan, math.inf])
+def test_invalid_energy_is_rejected(vehicle_type: type[Scooter | EBike], energy: float) -> None:
+    with pytest.raises(DomainError, match="суточный расход"):
         vehicle_type("Электро", 5, 5, energy)
 
 

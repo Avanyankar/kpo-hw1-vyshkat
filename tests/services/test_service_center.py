@@ -1,5 +1,6 @@
 import pytest
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.vehicles import Bicycle
 from vyshkat.services.service_center import ConditionServiceCenter
 
@@ -32,5 +33,5 @@ def test_threshold_is_configurable() -> None:
 
 @pytest.mark.parametrize("min_condition", [0, 11])
 def test_threshold_out_of_scale_is_rejected(min_condition: int) -> None:
-    with pytest.raises(ValueError, match="порог состояния"):
+    with pytest.raises(DomainError, match="порог состояния"):
         ConditionServiceCenter(min_condition)

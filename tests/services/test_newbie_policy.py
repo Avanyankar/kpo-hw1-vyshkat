@@ -1,5 +1,6 @@
 import pytest
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.vehicles import Bicycle
 from vyshkat.services.newbie_policy import NewbiePolicy
 
@@ -27,5 +28,5 @@ def test_threshold_is_configurable() -> None:
 
 @pytest.mark.parametrize("min_simplicity", [0, 11])
 def test_threshold_out_of_scale_is_rejected(min_simplicity: int) -> None:
-    with pytest.raises(ValueError, match="порог простоты"):
+    with pytest.raises(DomainError, match="порог простоты"):
         NewbiePolicy(min_simplicity)

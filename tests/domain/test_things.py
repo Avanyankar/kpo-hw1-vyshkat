@@ -1,7 +1,9 @@
+import math
 from dataclasses import FrozenInstanceError
 
 import pytest
 
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.things import ChargingCabinet, DockStation, Helmet, Thing
 
 
@@ -12,16 +14,16 @@ def test_thing_is_abstract() -> None:
 
 @pytest.mark.parametrize("name", ["", "   "])
 def test_blank_name_is_rejected(name: str) -> None:
-    with pytest.raises(ValueError, match="наименование"):
+    with pytest.raises(DomainError, match="наименование"):
         Helmet(name)
 
 
 @pytest.mark.parametrize("thing_type", [DockStation, ChargingCabinet])
-@pytest.mark.parametrize("energy", [0, -1.0])
-def test_non_positive_energy_is_rejected(
+@pytest.mark.parametrize("energy", [0, -1.0, math.nan, math.inf])
+def test_invalid_energy_is_rejected(
     thing_type: type[DockStation | ChargingCabinet], energy: float
 ) -> None:
-    with pytest.raises(ValueError, match="суточный расход"):
+    with pytest.raises(DomainError, match="суточный расход"):
         thing_type("Оборудование", energy)
 
 
