@@ -11,7 +11,7 @@ class NewbiePolicy:
     """
 
     def __init__(self, min_simplicity: int = 6) -> None:
-        require_scale("порог простоты", min_simplicity)
+        require_scale("min_simplicity", "порог простоты", min_simplicity)
         self._min_simplicity = min_simplicity
 
     def is_suitable(self, vehicle: Vehicle) -> bool:

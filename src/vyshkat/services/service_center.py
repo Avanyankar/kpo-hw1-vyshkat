@@ -23,7 +23,7 @@ class ConditionServiceCenter:
     """Принимает транспорт, если его техсостояние не ниже порога."""
 
     def __init__(self, min_condition: int = 5) -> None:
-        require_scale("порог состояния", min_condition)
+        require_scale("min_condition", "порог состояния", min_condition)
         self._min_condition = min_condition
 
     def inspect(self, vehicle: Vehicle) -> Verdict:

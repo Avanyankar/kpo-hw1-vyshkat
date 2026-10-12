@@ -34,7 +34,7 @@ class DockStation(Thing):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        require_positive("суточный расход", self.daily_energy_kwh)
+        require_positive("daily_energy_kwh", "суточный расход", self.daily_energy_kwh)
 
 
 @dataclass(frozen=True)
@@ -44,4 +44,4 @@ class ChargingCabinet(Thing):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        require_positive("суточный расход", self.daily_energy_kwh)
+        require_positive("daily_energy_kwh", "суточный расход", self.daily_energy_kwh)

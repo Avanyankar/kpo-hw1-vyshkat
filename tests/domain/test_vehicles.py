@@ -76,3 +76,21 @@ def test_vehicle_is_immutable() -> None:
 )
 def test_each_vehicle_has_its_kind(vehicle: Vehicle, kind: str) -> None:
     assert vehicle.kind == kind
+
+
+@pytest.mark.parametrize(
+    ("make_invalid", "attribute"),
+    [
+        (lambda: Bicycle(" ", 5, 5), "name"),
+        (lambda: Bicycle("Stels", 0, 5), "simplicity"),
+        (lambda: Bicycle("Stels", 5, 0), "condition"),
+        (lambda: Scooter("Ninebot", 5, 5, 0), "daily_energy_kwh"),
+    ],
+)
+def test_error_names_the_broken_attribute(
+    make_invalid: Callable[[], Vehicle], attribute: str
+) -> None:
+    with pytest.raises(DomainError) as error:
+        make_invalid()
+
+    assert error.value.attribute == attribute

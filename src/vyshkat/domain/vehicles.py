@@ -22,8 +22,8 @@ class Vehicle(ABC):
 
     def __post_init__(self) -> None:
         require_name(self.name)
-        require_scale("простота", self.simplicity)
-        require_scale("состояние", self.condition)
+        require_scale("simplicity", "простота", self.simplicity)
+        require_scale("condition", "состояние", self.condition)
 
 
 @dataclass(frozen=True)
@@ -35,7 +35,7 @@ class Scooter(Vehicle):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        require_positive("суточный расход", self.daily_energy_kwh)
+        require_positive("daily_energy_kwh", "суточный расход", self.daily_energy_kwh)
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,7 @@ class EBike(Vehicle):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        require_positive("суточный расход", self.daily_energy_kwh)
+        require_positive("daily_energy_kwh", "суточный расход", self.daily_energy_kwh)
 
 
 @dataclass(frozen=True)

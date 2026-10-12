@@ -18,7 +18,7 @@ class InventoryItem:
 
     def __post_init__(self) -> None:
         if not self.number.strip():
-            raise DomainError("инвентарный номер не может быть пустым")
+            raise DomainError("инвентарный номер не может быть пустым", "number")
 
     @property
     def kind(self) -> str:
