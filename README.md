@@ -46,3 +46,20 @@ make run
 он появляется только при постановке на баланс, вместе с обёрткой `InventoryItem`. Если бы
 номер был полем `Scooter`, то до приёмки он был бы пустым или выдавался бы до техосмотра и
 сгорал при отказе.
+
+## Приёмка
+
+Код: `src/vyshkat/services/`.
+
+```
+accept_vehicle(vehicle) ──► ServiceCenter.inspect(vehicle)
+                              ├─ отказ ──► Rejected(reason), номер не выдаётся
+                              └─ годен ──► номер INV-NNNN ──► InventoryItem ──► Fleet ──► Accepted(item)
+
+add_thing(thing) ─────────────────────────► номер INV-NNNN ──► InventoryItem ──► Fleet ──► Accepted(item)
+```
+
+- `ServiceCenter` — протокол техосмотра. Реализация `ConditionServiceCenter` принимает
+  транспорт с техсостоянием не ниже порога (по умолчанию 5).
+- `InventoryNumberGenerator` — одна серия номеров на технику и вещи.
+- `Fleet` — записи на балансе; повторный номер отклоняется.
