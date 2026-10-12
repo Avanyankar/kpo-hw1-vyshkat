@@ -22,6 +22,7 @@ build-backend = "uv_build"
 dev = [
     "mypy>=2.4.0",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.17.0",
 ]
 
@@ -41,3 +42,11 @@ testpaths = ["tests"]
 addopts = ["--import-mode=importlib"]
 # Общие тестовые двойники импортируются как `from fakes import ...`.
 pythonpath = ["tests"]
+
+[tool.coverage.run]
+source = ["vyshkat"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 60

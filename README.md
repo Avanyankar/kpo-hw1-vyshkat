@@ -9,7 +9,7 @@
 - **[uv](https://docs.astral.sh/uv/)**
 - **[ruff](https://docs.astral.sh/ruff/)**
 - **[mypy](https://mypy.readthedocs.io/)**
-- **[pytest](https://docs.pytest.org/)**
+- **[pytest](https://docs.pytest.org/)**, **[pytest-cov](https://pytest-cov.readthedocs.io/)**
 - **[punq](https://github.com/bobthemighty/punq)**: DI-контейнер
 
 ## Установка и запуск

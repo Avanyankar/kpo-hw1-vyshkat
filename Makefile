@@ -45,7 +45,7 @@ formatcheck: ## Проверить форматирование без изме�
 typecheck: ## Проверить типы
 	uv run mypy
 
-test: ## Запустить тесты
-	uv run pytest
+test: ## Запустить тесты с покрытием (порог 60%)
+	uv run pytest --cov
 
 check: lint formatcheck typecheck test ## Все проверки, как в pre-commit хуке
