@@ -1,23 +1,12 @@
+from fakes import FakeServiceCenter
+
 from vyshkat.domain.inventory import InventoryItem
 from vyshkat.domain.things import Helmet
-from vyshkat.domain.vehicles import Scooter, Vehicle
+from vyshkat.domain.vehicles import Scooter
 from vyshkat.services.acceptance import AcceptanceService, Accepted, Rejected
 from vyshkat.services.fleet import Fleet
 from vyshkat.services.numbering import InventoryNumberGenerator
 from vyshkat.services.service_center import Verdict
-
-
-class FakeServiceCenter:
-    """Выносит заранее заданный вердикт и запоминает, кого осматривал."""
-
-    def __init__(self, verdict: Verdict) -> None:
-        self.verdict = verdict
-        self.inspected: list[Vehicle] = []
-
-    def inspect(self, vehicle: Vehicle) -> Verdict:
-        self.inspected.append(vehicle)
-        return self.verdict
-
 
 APPROVE = Verdict(True, "годен")
 DECLINE = Verdict(False, "тормоза неисправны")

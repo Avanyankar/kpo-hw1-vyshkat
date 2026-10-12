@@ -10,6 +10,7 @@
 - **[ruff](https://docs.astral.sh/ruff/)**
 - **[mypy](https://mypy.readthedocs.io/)**
 - **[pytest](https://docs.pytest.org/)**
+- **[punq](https://github.com/bobthemighty/punq)**: DI-контейнер
 
 ## Установка и запуск
 
@@ -75,3 +76,24 @@ add_thing(thing) ─────────────────────
 | Суточный расход энергии | сумма по активам, которые являются `EnergyConsumer` |
 | Техника для новичков | транспорт, который одобряет `NewbiePolicy`: простота ≥ 6 |
 | Номера, виды и наименования | всё на балансе; отчёт видит записи только как `Inventoried` |
+
+## DI-контейнер
+
+Composition root — `src/vyshkat/container.py`, функция `build_container()`. Только здесь решается,
+какая реализация стоит за абстракцией; остальные классы получают зависимости через конструктор
+и про контейнер не знают.
+
+| Регистрация | Время жизни | Почему |
+|---|---|---|
+| `Fleet`, `InventoryNumberGenerator` | один экземпляр на приложение | это состояние учёта: приёмка и отчёты должны видеть один парк и одну серию номеров |
+| `ServiceCenter` → `ConditionServiceCenter` | новый при каждом запросе | без состояния |
+| `NewbiePolicy`, `AcceptanceService`, `FleetReports` | новый при каждом запросе | без собственного состояния, общее берут из одиночек выше |
+
+Подмена техосмотра в тестах (`tests/test_container.py`): поверх готового контейнера
+регистрируется фейк, и приёмка, полученная из контейнера, осматривает уже через него:
+
+```python
+container = build_container()
+container.register(ServiceCenter, instance=FakeServiceCenter(Verdict(False, "...")))
+container.resolve(AcceptanceService)  # внутри — фейк
+```

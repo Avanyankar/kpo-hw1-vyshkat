@@ -280,6 +280,18 @@ wheels = [
 ]
 
 [[package]]
+name = "punq"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0d/38/15118e8542ada95a49f63648b90bdfdd1115bbc2ed8caf3f0582d509dcc9/punq-0.9.0.tar.gz", hash = "sha256:85aab7455fac47ce1b099fcb7ea2d8e9f562014672e9d7d46e4cc8e60e19685d", size = 17848, upload-time = "2026-09-08T06:21:08.138Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4f/e3/f668dbcfd7f2fda95b850989640417e692a346bda688415801063dcf2504/punq-0.9.0-py3-none-any.whl", hash = "sha256:c8a3cc778776982cab170853c09a8712d98daae77bdd6516740c1360d41dc28c", size = 9644, upload-time = "2026-09-08T06:21:07.261Z" },
+]
+
+[[package]]
 name = "pygments"
 version = "2.21.0"
 source = { registry = "https://pypi.org/simple" }
@@ -342,6 +354,9 @@ wheels = [
 name = "vyshkat"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "punq" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -351,6 +366,7 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "punq", specifier = ">=0.9.0" }]
 
 [package.metadata.requires-dev]
 dev = [
