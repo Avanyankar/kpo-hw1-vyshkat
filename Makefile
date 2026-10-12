@@ -12,7 +12,7 @@ endif
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup install run lint format formatcheck typecheck check
+.PHONY: help setup install run lint format formatcheck typecheck test check
 
 help: ## Показать список команд
 	@awk 'BEGIN {FS = ":.*## "} /^##@ / {printf "\n\033[1m%s\033[0m\n", substr($$0, 5)} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -45,4 +45,7 @@ formatcheck: ## Проверить форматирование без изме�
 typecheck: ## Проверить типы
 	uv run mypy
 
-check: lint formatcheck typecheck ## Все проверки, как в pre-commit хуке
+test: ## Запустить тесты
+	uv run pytest
+
+check: lint formatcheck typecheck test ## Все проверки, как в pre-commit хуке

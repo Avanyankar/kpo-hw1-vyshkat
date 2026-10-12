@@ -9,6 +9,7 @@
 - **[uv](https://docs.astral.sh/uv/)**
 - **[ruff](https://docs.astral.sh/ruff/)**
 - **[mypy](https://mypy.readthedocs.io/)**
+- **[pytest](https://docs.pytest.org/)**
 
 ## Установка и запуск
 

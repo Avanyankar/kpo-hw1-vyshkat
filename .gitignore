@@ -8,6 +8,7 @@ __pycache__/
 # Кэши инструментов
 .ruff_cache/
 .mypy_cache/
+.pytest_cache/
 
 # Артефакты сборки
 build/
