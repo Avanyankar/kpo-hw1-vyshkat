@@ -1,0 +1,17 @@
+[project]
+name = "vyshkat"
+version = "0.1.0"
+description = "Учёт парка кикшеринга «ВышКат»: ДЗ №1 по КПО"
+readme = "README.md"
+authors = [
+    { name = "Karen Avanyan", email = "IProgrammist.1@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+vyshkat = "vyshkat:main"
+
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
