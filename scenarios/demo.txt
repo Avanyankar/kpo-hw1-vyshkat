@@ -1,0 +1,60 @@
+# ВышКат — демонстрация всех сценариев
+# Запуск: make demo
+
+# --- Справка ---------------------------------------------------------------
+help
+kinds
+
+# --- Пустой парк ------------------------------------------------------------
+report
+newbies
+inventory
+
+# --- 1. Приём техники: перед приёмкой техосмотр, порог состояния 5 ----------
+accept scooter "Ninebot Max G30" simplicity=7 condition=8 energy=0.45
+accept ebike "Eltreco XT 800" simplicity=4 condition=9 energy=0.9
+accept bicycle "Stels Navigator" simplicity=9 condition=6
+# параметры можно указывать в любом порядке; состояние 5 — ровно на пороге
+accept scooter "Kugoo S3" energy=0.35 condition=5 simplicity=6
+
+# --- 2. Техосмотр не пройден: на баланс не попадает, номер не тратится -------
+accept scooter "Xiaomi M365" simplicity=8 condition=3 energy=0.3
+accept bicycle "Forward Sporting" simplicity=7 condition=4
+
+# --- 3. Вещи: ставятся на баланс без техосмотра -----------------------------
+add helmet "Шлем M"
+add helmet "Шлем L"
+add dock "Док-станция у корпуса на Покровке" energy=1.2
+add cabinet "Зарядный шкаф на Мясницкой" energy=3.5
+
+# --- 4. Отчёты --------------------------------------------------------------
+# число единиц по видам и суммарный суточный расход (велосипед и шлемы не потребляют)
+report
+# техника с простотой не ниже 6: электровелосипед (4) сюда не попадает
+newbies
+# номера, виды и наименования всей техники и вещей
+inventory
+
+# --- 5. Ошибки ввода: сообщение, и работа продолжается ----------------------
+# перепутана команда
+accept helmet "Шлем XL"
+add scooter "Kugoo M4" simplicity=5 condition=7 energy=0.6
+# неизвестные команда и вид
+sell scooter
+accept trike "Трайк" simplicity=7 condition=5
+# параметр забыт / лишний
+accept bicycle "Stels Pilot" simplicity=7
+accept bicycle "Stels Pilot" simplicity=7 condition=5 color=red
+# значение вне шкалы / не число
+accept bicycle "Stels Pilot" simplicity=15 condition=5
+add dock "Док у метро" energy=0,4
+# название с пробелами без кавычек / незакрытая кавычка
+accept bicycle Stels Pilot simplicity=7 condition=5
+add helmet "Шлем XL
+# отчёт не принимает аргументов
+report all
+
+# Ни одна ошибка не изменила парк
+report
+
+exit
