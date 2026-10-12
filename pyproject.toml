@@ -18,6 +18,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "mypy>=2.4.0",
     "ruff>=0.17.0",
 ]
 
@@ -27,3 +28,7 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "N", "UP", "B", "SIM", "RUF"]
 ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.mypy]
+strict = true
+files = ["src"]

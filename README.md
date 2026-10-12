@@ -8,6 +8,7 @@
 - **Python 3.12+**
 - **[uv](https://docs.astral.sh/uv/)**
 - **[ruff](https://docs.astral.sh/ruff/)**
+- **[mypy](https://mypy.readthedocs.io/)**
 
 ## Установка и запуск
 
