@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-vyshkat = "vyshkat:main"
+vyshkat = "vyshkat.cli.main:main"
 
 [build-system]
 requires = ["uv_build>=0.9.26,<0.10.0"]

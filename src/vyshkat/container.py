@@ -2,6 +2,7 @@
 
 import punq
 
+from vyshkat.cli.app import ConsoleApp
 from vyshkat.services.acceptance import AcceptanceService
 from vyshkat.services.fleet import Fleet
 from vyshkat.services.newbie_policy import NewbiePolicy
@@ -22,5 +23,6 @@ def build_container() -> punq.Container:
     container.register(NewbiePolicy)
     container.register(AcceptanceService)
     container.register(FleetReports)
+    container.register(ConsoleApp)
 
     return container
