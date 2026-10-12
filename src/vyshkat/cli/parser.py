@@ -11,6 +11,12 @@ from types import MappingProxyType
 
 from vyshkat.cli.errors import CommandError
 
+# Сообщения shlex на английском; других ошибок он не выдаёт.
+SHLEX_ERRORS = {
+    "No closing quotation": "не закрыта кавычка",
+    "No escaped character": "строка обрывается на символе «\\»",
+}
+
 
 @dataclass(frozen=True)
 class Command:
@@ -23,8 +29,9 @@ def parse_line(line: str) -> Command | None:
     """Пустая строка и строка-комментарий (`# ...`) дают None."""
     try:
         tokens = shlex.split(line, comments=True)
-    except ValueError as error:  # незакрытая кавычка
-        raise CommandError(f"не удалось разобрать строку: {error}") from error
+    except ValueError as error:
+        message = SHLEX_ERRORS.get(str(error), f"не удалось разобрать строку ({error})")
+        raise CommandError(message) from error
     if not tokens:
         return None
 

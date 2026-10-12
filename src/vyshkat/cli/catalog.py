@@ -6,8 +6,14 @@ from dataclasses import dataclass
 from types import MappingProxyType
 
 from vyshkat.cli.errors import CommandError
+from vyshkat.domain.errors import DomainError
 from vyshkat.domain.things import ChargingCabinet, DockStation, Helmet, Thing
 from vyshkat.domain.vehicles import Bicycle, EBike, Scooter, Vehicle
+
+# Атрибут доменного объекта -> ключ параметра в команде.
+PARAM_FOR_ATTRIBUTE: Mapping[str, str] = MappingProxyType(
+    {"simplicity": "simplicity", "condition": "condition", "daily_energy_kwh": "energy"}
+)
 
 
 class Params:
@@ -86,14 +92,29 @@ THING_KINDS: Mapping[str, Kind[Thing]] = MappingProxyType(
 
 def create[T](kinds: Mapping[str, Kind[T]], args: tuple[str, ...], params: Mapping[str, str]) -> T:
     """Создаёт объект по `<вид> "<название>"` и параметрам команды."""
-    if len(args) != 2:
-        raise CommandError('ожидается: <вид> "<название>" [ключ=значение ...]')
-    kind_name, name = args
+    if not args:
+        raise CommandError(f"не указан вид, доступны: {', '.join(kinds)}")
+    kind_name, *rest = args
     kind = kinds.get(kind_name)
     if kind is None:
         raise CommandError(f"неизвестный вид «{kind_name}», доступны: {', '.join(kinds)}")
+    if not rest:
+        raise CommandError(f'не указано название: {kind_name} "<название>"')
+    name, *extra = rest
+    if extra:
+        raise CommandError(
+            f"лишние слова: {' '.join(extra)}. "
+            "Название с пробелами пишется в кавычках, параметры — как ключ=значение"
+        )
 
     checked = Params(params)
-    created = kind.build(name, checked)
+    try:
+        created = kind.build(name, checked)
+    except DomainError as error:
+        # Домен называет атрибут по-своему; показываем его так, как его ввёл пользователь.
+        param = PARAM_FOR_ATTRIBUTE.get(error.attribute or "")
+        if param is None or param not in params:
+            raise
+        raise CommandError(f"{param}={params[param]} — {error}") from error
     checked.ensure_all_used()
     return created

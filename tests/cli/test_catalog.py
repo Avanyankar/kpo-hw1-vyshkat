@@ -1,8 +1,11 @@
+from collections.abc import Mapping
+
 import pytest
 
-from vyshkat.cli.catalog import THING_KINDS, VEHICLE_KINDS, create
+from vyshkat.cli.catalog import THING_KINDS, VEHICLE_KINDS, Kind, create
 from vyshkat.cli.errors import CommandError
 from vyshkat.domain.errors import DomainError
+from vyshkat.domain.inventory import Asset
 from vyshkat.domain.things import ChargingCabinet, DockStation, Helmet
 from vyshkat.domain.vehicles import Bicycle, EBike, Scooter
 
@@ -35,9 +38,17 @@ def test_unknown_kind_lists_available_ones() -> None:
         create(VEHICLE_KINDS, ("helmet", "Шлем M"), {})
 
 
-@pytest.mark.parametrize("args", [(), ("helmet",), ("helmet", "Шлем", "лишнее")])
-def test_kind_and_one_name_are_required(args: tuple[str, ...]) -> None:
-    with pytest.raises(CommandError, match="ожидается"):
+@pytest.mark.parametrize(
+    ("args", "message"),
+    [
+        ((), "не указан вид, доступны: helmet, dock, cabinet"),
+        (("helmet",), 'не указано название: helmet "<название>"'),
+        (("helmet", "Шлем", "M"), "лишние слова: M. Название с пробелами пишется в кавычках"),
+        (("dock", "Док", "1", "2"), "лишние слова: 1 2. .* параметры — как ключ=значение"),
+    ],
+)
+def test_wrong_number_of_words_is_explained(args: tuple[str, ...], message: str) -> None:
+    with pytest.raises(CommandError, match=message):
         create(THING_KINDS, args, {})
 
 
@@ -70,8 +81,39 @@ def test_bad_energy_is_reported(value: str, message: str) -> None:
         create(THING_KINDS, ("dock", "Док"), {"energy": value})
 
 
-def test_domain_rules_still_apply() -> None:
-    params = {**VEHICLE_PARAMS, "simplicity": "15"}
+@pytest.mark.parametrize(
+    ("kinds", "args", "params", "message"),
+    [
+        (
+            VEHICLE_KINDS,
+            ("bicycle", "Stels"),
+            {**VEHICLE_PARAMS, "simplicity": "15"},
+            "simplicity=15 — простота: ожидается от 1 до 10",
+        ),
+        (
+            VEHICLE_KINDS,
+            ("bicycle", "Stels"),
+            {**VEHICLE_PARAMS, "condition": "0"},
+            "condition=0 — состояние: ожидается от 1 до 10",
+        ),
+        (
+            THING_KINDS,
+            ("dock", "Док"),
+            {"energy": "-1"},
+            "energy=-1 — суточный расход: ожидается конечное число больше нуля",
+        ),
+    ],
+)
+def test_domain_errors_name_the_param_as_typed(
+    kinds: Mapping[str, Kind[Asset]],
+    args: tuple[str, ...],
+    params: dict[str, str],
+    message: str,
+) -> None:
+    with pytest.raises(CommandError, match=message):
+        create(kinds, args, params)
 
-    with pytest.raises(DomainError, match="простота"):
-        create(VEHICLE_KINDS, ("bicycle", "Stels"), params)
+
+def test_domain_error_without_param_passes_through() -> None:
+    with pytest.raises(DomainError, match="наименование"):
+        create(THING_KINDS, ("helmet", "  "), {})

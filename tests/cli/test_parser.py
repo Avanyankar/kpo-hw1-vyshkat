@@ -27,9 +27,16 @@ def test_trailing_comment_is_ignored() -> None:
     assert parse_line("inventory  # всё на балансе") == Command("inventory")
 
 
-def test_unclosed_quote_is_reported() -> None:
-    with pytest.raises(CommandError, match="не удалось разобрать"):
-        parse_line('add helmet "Шлем M')
+@pytest.mark.parametrize(
+    ("line", "message"),
+    [
+        ('add helmet "Шлем M', "не закрыта кавычка"),
+        ("add helmet Шлем\\", "строка обрывается на символе «\\\\»"),
+    ],
+)
+def test_broken_line_is_reported_in_russian(line: str, message: str) -> None:
+    with pytest.raises(CommandError, match=message):
+        parse_line(line)
 
 
 def test_empty_param_name_is_reported() -> None:
@@ -38,7 +45,6 @@ def test_empty_param_name_is_reported() -> None:
 
 
 def test_equals_sign_makes_a_param_even_in_quotes() -> None:
-    # Известное ограничение: shlex снимает кавычки до разбора, «=» в названии не поддерживается.
     assert parse_line('add helmet "Шлем=M"') == Command("add", ("helmet",), {"Шлем": "M"})
 
 
