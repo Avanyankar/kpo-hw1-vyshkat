@@ -6,10 +6,10 @@ from vyshkat.domain.things import Helmet
 from vyshkat.domain.vehicles import Scooter
 
 
-def test_item_takes_name_from_its_asset() -> None:
+def test_item_takes_kind_and_name_from_its_asset() -> None:
     item = InventoryItem("INV-0001", Scooter("Ninebot", 7, 8, 0.4))
 
-    assert item.name == "Ninebot"
+    assert (item.kind, item.name) == ("Электросамокат", "Ninebot")
 
 
 @pytest.mark.parametrize("number", ["", "   "])
@@ -23,4 +23,4 @@ def test_item_satisfies_inventoried() -> None:
     # под протокол Inventoried, упадёт make typecheck.
     item: Inventoried = InventoryItem("INV-0002", Helmet("Шлем M"))
 
-    assert (item.number, item.name) == ("INV-0002", "Шлем M")
+    assert (item.number, item.kind, item.name) == ("INV-0002", "Шлем", "Шлем M")

@@ -20,5 +20,9 @@ class InventoryItem:
             raise ValueError("инвентарный номер не может быть пустым")
 
     @property
+    def kind(self) -> str:
+        return self.asset.kind
+
+    @property
     def name(self) -> str:
         return self.asset.name

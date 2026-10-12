@@ -16,10 +16,13 @@ class EnergyConsumer(Protocol):
 
 
 class Inventoried(Protocol):
-    """Объект на балансе: инвентарный номер и наименование."""
+    """Строка инвентарной ведомости: номер, вид и наименование объекта на балансе."""
 
     @property
     def number(self) -> str: ...
+
+    @property
+    def kind(self) -> str: ...
 
     @property
     def name(self) -> str: ...
