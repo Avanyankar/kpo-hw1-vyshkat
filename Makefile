@@ -12,12 +12,15 @@ endif
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install run
+.PHONY: help setup install run lint format formatcheck check
 
 help: ## Показать список команд
-	@awk 'BEGIN {FS = ":.*## "} /^##@ / {printf "\n\033[1m%s\033[0m\n", substr($$0, 5)} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^##@ / {printf "\n\033[1m%s\033[0m\n", substr($$0, 5)} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 ##@ Установка
+
+setup: install ## Установить зависимости и включить git-хуки
+	git config core.hooksPath .githooks
 
 install: ## Создать .venv и установить зависимости
 	uv sync --frozen
@@ -26,3 +29,17 @@ install: ## Создать .venv и установить зависимости
 
 run: ## Запустить приложение
 	uv run vyshkat
+
+##@ Код
+
+lint: ## Проверить код линтером
+	uv run ruff check .
+
+format: ## Отформатировать код
+	uv run ruff check --fix .
+	uv run ruff format .
+
+formatcheck: ## Проверить форматирование без изменений
+	uv run ruff format --check .
+
+check: lint formatcheck ## Линтер и проверка форматирования, как в pre-commit хуке

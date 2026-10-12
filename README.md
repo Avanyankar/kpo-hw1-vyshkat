@@ -7,6 +7,7 @@
 
 - **Python 3.12+**
 - **[uv](https://docs.astral.sh/uv/)**
+- **[ruff](https://docs.astral.sh/ruff/)**
 
 ## Установка и запуск
 
